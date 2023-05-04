@@ -77,7 +77,6 @@
     <Compile Include="Assets\Scripts\Target.cs" />
     <Compile Include="Assets\Scripts\MoveToPathEnd_agent.cs" />
     <Compile Include="Assets\Scripts\robot_scripts\ArticulationHandManualInput.cs" />
-    <Compile Include="Assets\Scripts\Robot.cs" />
     <Compile Include="Assets\Scripts\TrackCheckpoints.cs" />
     <Compile Include="Assets\Scripts\robot_scripts\PincherFingerController.cs" />
     <Compile Include="Assets\Scripts\Move_Along.cs" />
