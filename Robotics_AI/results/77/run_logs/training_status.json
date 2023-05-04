@@ -1,0 +1,65 @@
+{
+    "Move_Along": {
+        "checkpoints": [
+            {
+                "steps": 1799946,
+                "file_path": "results\\77\\Move_Along\\Move_Along-1799946.onnx",
+                "reward": -1.0,
+                "creation_time": 1682321681.04711,
+                "auxillary_file_paths": [
+                    "results\\77\\Move_Along\\Move_Along-1799946.pt"
+                ]
+            },
+            {
+                "steps": 1849988,
+                "file_path": "results\\77\\Move_Along\\Move_Along-1849988.onnx",
+                "reward": -1.0,
+                "creation_time": 1682321871.93311,
+                "auxillary_file_paths": [
+                    "results\\77\\Move_Along\\Move_Along-1849988.pt"
+                ]
+            },
+            {
+                "steps": 1899998,
+                "file_path": "results\\77\\Move_Along\\Move_Along-1899998.onnx",
+                "reward": -1.0,
+                "creation_time": 1682322047.6937022,
+                "auxillary_file_paths": [
+                    "results\\77\\Move_Along\\Move_Along-1899998.pt"
+                ]
+            },
+            {
+                "steps": 1949976,
+                "file_path": "results\\77\\Move_Along\\Move_Along-1949976.onnx",
+                "reward": null,
+                "creation_time": 1682322239.0711474,
+                "auxillary_file_paths": [
+                    "results\\77\\Move_Along\\Move_Along-1949976.pt"
+                ]
+            },
+            {
+                "steps": 1965144,
+                "file_path": "results\\77\\Move_Along\\Move_Along-1965144.onnx",
+                "reward": null,
+                "creation_time": 1682322287.9139757,
+                "auxillary_file_paths": [
+                    "results\\77\\Move_Along\\Move_Along-1965144.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1965144,
+            "file_path": "results\\77\\Move_Along.onnx",
+            "reward": null,
+            "creation_time": 1682322287.9139757,
+            "auxillary_file_paths": [
+                "results\\77\\Move_Along\\Move_Along-1965144.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "2.0.0"
+    }
+}
