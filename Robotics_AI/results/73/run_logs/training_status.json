@@ -1,0 +1,56 @@
+{
+    "Move_Along": {
+        "checkpoints": [
+            {
+                "steps": 499991,
+                "file_path": "results\\73\\Move_Along\\Move_Along-499991.onnx",
+                "reward": -0.6062500006519258,
+                "creation_time": 1677234780.5158784,
+                "auxillary_file_paths": [
+                    "results\\73\\Move_Along\\Move_Along-499991.pt"
+                ]
+            },
+            {
+                "steps": 999968,
+                "file_path": "results\\73\\Move_Along\\Move_Along-999968.onnx",
+                "reward": -0.3520000010728836,
+                "creation_time": 1677235189.5577025,
+                "auxillary_file_paths": [
+                    "results\\73\\Move_Along\\Move_Along-999968.pt"
+                ]
+            },
+            {
+                "steps": 1499971,
+                "file_path": "results\\73\\Move_Along\\Move_Along-1499971.onnx",
+                "reward": -0.3285714292100498,
+                "creation_time": 1677235586.6818814,
+                "auxillary_file_paths": [
+                    "results\\73\\Move_Along\\Move_Along-1499971.pt"
+                ]
+            },
+            {
+                "steps": 1669725,
+                "file_path": "results\\73\\Move_Along\\Move_Along-1669725.onnx",
+                "reward": -0.427272728220983,
+                "creation_time": 1677235730.066209,
+                "auxillary_file_paths": [
+                    "results\\73\\Move_Along\\Move_Along-1669725.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1669725,
+            "file_path": "results\\73\\Move_Along.onnx",
+            "reward": -0.427272728220983,
+            "creation_time": 1677235730.066209,
+            "auxillary_file_paths": [
+                "results\\73\\Move_Along\\Move_Along-1669725.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.13.1"
+    }
+}
