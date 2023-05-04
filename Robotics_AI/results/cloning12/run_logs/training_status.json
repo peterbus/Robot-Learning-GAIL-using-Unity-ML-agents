@@ -1,0 +1,65 @@
+{
+    "Move_Along": {
+        "checkpoints": [
+            {
+                "steps": 2699979,
+                "file_path": "results\\cloning12\\Move_Along\\Move_Along-2699979.onnx",
+                "reward": -101.59242856843132,
+                "creation_time": 1682651022.4889064,
+                "auxillary_file_paths": [
+                    "results\\cloning12\\Move_Along\\Move_Along-2699979.pt"
+                ]
+            },
+            {
+                "steps": 2799936,
+                "file_path": "results\\cloning12\\Move_Along\\Move_Along-2799936.onnx",
+                "reward": -94.3315966369725,
+                "creation_time": 1682651135.2430983,
+                "auxillary_file_paths": [
+                    "results\\cloning12\\Move_Along\\Move_Along-2799936.pt"
+                ]
+            },
+            {
+                "steps": 2899993,
+                "file_path": "results\\cloning12\\Move_Along\\Move_Along-2899993.onnx",
+                "reward": -87.12174418499303,
+                "creation_time": 1682651250.690767,
+                "auxillary_file_paths": [
+                    "results\\cloning12\\Move_Along\\Move_Along-2899993.pt"
+                ]
+            },
+            {
+                "steps": 2999957,
+                "file_path": "results\\cloning12\\Move_Along\\Move_Along-2999957.onnx",
+                "reward": -162.0,
+                "creation_time": 1682651671.78752,
+                "auxillary_file_paths": [
+                    "results\\cloning12\\Move_Along\\Move_Along-2999957.pt"
+                ]
+            },
+            {
+                "steps": 3000021,
+                "file_path": "results\\cloning12\\Move_Along\\Move_Along-3000021.onnx",
+                "reward": -162.0,
+                "creation_time": 1682651671.8486323,
+                "auxillary_file_paths": [
+                    "results\\cloning12\\Move_Along\\Move_Along-3000021.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 3000021,
+            "file_path": "results\\cloning12\\Move_Along.onnx",
+            "reward": -162.0,
+            "creation_time": 1682651671.8486323,
+            "auxillary_file_paths": [
+                "results\\cloning12\\Move_Along\\Move_Along-3000021.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "2.0.0"
+    }
+}
