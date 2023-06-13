@@ -1,0 +1,65 @@
+{
+    "Move_Along": {
+        "checkpoints": [
+            {
+                "steps": 4499960,
+                "file_path": "results\\test17\\Move_Along\\Move_Along-4499960.onnx",
+                "reward": 19.522291702528793,
+                "creation_time": 1686547428.042542,
+                "auxillary_file_paths": [
+                    "results\\test17\\Move_Along\\Move_Along-4499960.pt"
+                ]
+            },
+            {
+                "steps": 4999991,
+                "file_path": "results\\test17\\Move_Along\\Move_Along-4999991.onnx",
+                "reward": 21.364777604738872,
+                "creation_time": 1686548062.0784473,
+                "auxillary_file_paths": [
+                    "results\\test17\\Move_Along\\Move_Along-4999991.pt"
+                ]
+            },
+            {
+                "steps": 5499975,
+                "file_path": "results\\test17\\Move_Along\\Move_Along-5499975.onnx",
+                "reward": 21.466320556688046,
+                "creation_time": 1686548678.1060934,
+                "auxillary_file_paths": [
+                    "results\\test17\\Move_Along\\Move_Along-5499975.pt"
+                ]
+            },
+            {
+                "steps": 5999942,
+                "file_path": "results\\test17\\Move_Along\\Move_Along-5999942.onnx",
+                "reward": 21.6196720092023,
+                "creation_time": 1686549280.8321376,
+                "auxillary_file_paths": [
+                    "results\\test17\\Move_Along\\Move_Along-5999942.pt"
+                ]
+            },
+            {
+                "steps": 6000006,
+                "file_path": "results\\test17\\Move_Along\\Move_Along-6000006.onnx",
+                "reward": 21.6196720092023,
+                "creation_time": 1686549280.8788328,
+                "auxillary_file_paths": [
+                    "results\\test17\\Move_Along\\Move_Along-6000006.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 6000006,
+            "file_path": "results\\test17\\Move_Along.onnx",
+            "reward": 21.6196720092023,
+            "creation_time": 1686549280.8788328,
+            "auxillary_file_paths": [
+                "results\\test17\\Move_Along\\Move_Along-6000006.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "2.0.0"
+    }
+}
