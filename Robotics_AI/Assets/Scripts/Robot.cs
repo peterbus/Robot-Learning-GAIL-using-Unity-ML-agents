@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class Robot : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private float forwardAmount;
+    private float turnAmount;
+    private float updown;
+    private Vector3 position;
+    private Quaternion rotation;
 
-    // Update is called once per frame
-    void Update()
+    // Start is called before the first frame update
+    void Awake()
     {
-        
+        position = transform.localPosition; 
+        rotation = transform.localRotation;
     }
 }

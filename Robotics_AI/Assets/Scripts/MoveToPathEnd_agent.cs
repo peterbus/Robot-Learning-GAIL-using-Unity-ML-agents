@@ -5,7 +5,16 @@ using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 
-public class MoveToPathEnd_agent : Agent {
+public class MoveToPathEnd_agent : Agent
+{
+
+    // some parts of the code and settings  are informed by the tutorial "Simple Checkpoints in Unity" by CodeMonkey https://www.youtube.com/watch?v=IOYNg6v9sfc
+    // and also "AI learns to drive a Car" https://www.youtube.com/watch?v=2X5m_nDBvS4.
+    // A reference code has been studied too, which elaborates certain methods in the TrackCheckpoint Class: IR-Project "SelfDrivingCars" by @monidp9
+    // link: https://github.com/monidp9/IR-Project/tree/master/SelfDrivingCars. 
+    // All accessed January-June 2023 [ONLINE]
+
+
 
 
     [SerializeField] private Transform targetTransform;//user defined 
@@ -16,36 +25,37 @@ public class MoveToPathEnd_agent : Agent {
     [SerializeField] private TrackCheckpoints trackCheckpoints;
     public GameObject Effector;
     private Vector3 actualPosition;
-    private Waypoints robotTransform;
-
+    private TrackCheckpoints robotTransform;
+    private CheckpointSingle checkpointSingle;
+    private Robot robot;//just an empty tag for the agent going through the checkpoints
+   // private Rigidbody agentRb;
     public int numberOfPositions;
     private int current;
 
-    // [SerializeField] private Transform guideTransform; //guide Hand object navigating the Target Agent
-
-
     private void Awake()
     {
-        robotTransform = GetComponent<Waypoints>();
-
-
+        //agentRb = GetComponent<Rigidbody>();
+        robot = GetComponent<Robot>();//empty GameObject with a tag attached to the ML_Agent, which itself is goigng through the checkpoints 
 
     }
 
     private void Start()
     {
-        //trackCheckpoints = GetComponent<TrackCheckpoints>();
+       
         trackCheckpoints.OnRobotCorrectCheckpoint += TrackCheckpoints_OnRobotCorrectCheckpoint;
         trackCheckpoints.OnRobotWrongCheckpoint += TrackCheckpoints_OnRobotWrongCheckpoint;
-        current = 1;
+        current = 0;
     }
 
     private void TrackCheckpoints_OnRobotWrongCheckpoint(object sender, TrackCheckpoints.OnRobotCheckEventArgs e)
+
     {
+       //this is the main reward logic
         if (e.robotTransform == transform)
         {
-            AddReward(-0.5f);
-           // EndEpisode();
+            AddReward(-1f);
+            Debug.Log("Wrong Checkpoint");
+            //EndEpisode(); // this should be definitely OFF, otherwise the agent has no chance to explore other options!!!
         }
     }
 
@@ -53,124 +63,86 @@ public class MoveToPathEnd_agent : Agent {
     {
         if (e.robotTransform == transform)
         {
-            AddReward(0.5f);
+            AddReward(+1f);
+            Debug.Log("Correct Checkpoint");
         }
     }
-
-
-
 
     public override void OnEpisodeBegin()
     {
-      //   Vector3 zeroV = new Vector3(0, -0.03f, 0);
-       //  targetTransform.localPosition = zeroV;
-       //  transform.localPosition = zeroV;
+        //in case zero start
+        Vector3 zeroV = new Vector3(0.268f, -0.285f, 0.012f);
+        Debug.Log("EPISODE STARTED");
+
+          transform.localPosition = zeroV;
+          targetTransform.localPosition = zeroV;
+      // float speed = 1.0f;
+      // transform.localPosition = Vector3.MoveTowards(transform.localPosition, zeroV, speed * Time.deltaTime);
+      // targetTransform.localPosition = Vector3.MoveTowards(targetTransform.localPosition, zeroV, speed * Time.deltaTime);
+ 
+        trackCheckpoints.ResetCheckpoint(transform);
         
-
-        float speed = 1f;
-       // targetTransform.localPosition = Vector3.MoveTowards(targetTransform.localPosition, start_transform.position, speed * Time.deltaTime);
-
-      
-
-        
-        foreach (GameObject checkpoint in checkpoints)
+       /* foreach (GameObject checkpoint in checkpoints)
         {
-            checkpoint.transform.position=checkpoint.transform.position + new Vector3(UnityEngine.Random.Range(-0.008f, +0.008f), 0, UnityEngine.Random.Range(-0.008f, +0.008f));
-        }
+            checkpoint.transform.localPosition = checkpoint.transform.localPosition + new Vector3(UnityEngine.Random.Range(-0.0003f, +0.0003f), 0, UnityEngine.Random.Range(-0.0003f, +0.0003f));
+        }*/
 
     }
-
 
     public override void CollectObservations(VectorSensor sensor)
     {
         //inputs for the AI. What data the AI needs?
         //position
-        //postiton of the Path_end
+        CheckpointSingle checkpoint = trackCheckpoints.GetNextCheckpoint(transform);
+        Vector3 checkpointForward = trackCheckpoints.GetNextCheckpoint(transform).transform.forward;
+        Vector3 checkpointForward2 = trackCheckpoints.GetNextCheckpoint(transform).transform.right;
+        Transform checkpointTransform = checkpoint.transform;
 
-        Vector3 checkpointForward = trackCheckpoints.transform.forward;
         float directionDot = Vector3.Dot(transform.forward, checkpointForward);
-       // sensor.AddObservation(directionDot);
-        sensor.AddObservation(transform.localPosition);
-        sensor.AddObservation(targetTransform.localPosition);
+        sensor.AddObservation(directionDot);
+
+        float directionDot2 = Vector3.Dot(transform.right, checkpointForward2);
+        sensor.AddObservation(directionDot2);
 
     }
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        ActionSegment<int> discreteActions = actions.DiscreteActions;
-       
-        float forwardAmount = 0f;
-        float turnAmount = 0f;
-        float updown = 0f;
-       
+        //ActionSegment<int> discreteActions = actions.DiscreteActions;
+        ActionSegment<float> act = actions.ContinuousActions;
 
-        switch (actions.DiscreteActions[0])
-        {
-            case 0: forwardAmount = 0f; break;
-            case 1: forwardAmount = +1f; break;
-            case 2: forwardAmount = -1f; break;
-        }
-        switch (actions.DiscreteActions[1])   
-        {
-            case 0: updown = 0f; break;
-            case 1: updown = +0.05f; break;
-            case 2: updown = -0.05f; break;
-        }
-        switch (actions.DiscreteActions[2])
-        {
-            case 0: turnAmount = 0f; break;
-            case 1: turnAmount = +1f; break;
-            case 2: turnAmount = -1f; break;
-        }
- 
+        var action0 = act[0];
+        var action1 = act[1];
+        var action2 = act[2];
 
-       
+        //initial values
+        /*  float forwardAmount = 0f;
+          float turnAmount = 0f;
+          float updown = 0f;*/
 
-        float moveSpeed = 0.8f;
+        float forwardAmount = action0;
+        float turnAmount = action1;
+        float updown = action2;
+        
+        float moveSpeed = 1f;
+
+
         
         transform.localPosition += new Vector3(forwardAmount, updown, turnAmount) * Time.deltaTime * moveSpeed;
-
-        float speed = 0.8f;
-        targetTransform.localPosition = Vector3.MoveTowards(targetTransform.localPosition, transform.localPosition, speed * Time.deltaTime);
-        transform.right = transform.localPosition;
-        transform.rotation = Quaternion.LookRotation(targetTransform.localPosition);
-
-
-
-
-
-        float distance2Checkpoint = Vector3.Distance(targetTransform.localPosition, end_transform.localPosition);
-  
-        if (targetTransform.localPosition == end_transform.localPosition)
-        {
-            SetReward(0.1f);
-            EndEpisode();
-           // Debug.Log("Episode ended after the vectors met");
-           // Debug.Log("Reward Set successfully after the vectors met");
-        }
-
-        //Debug.Log(distance2Checkpoint);
-
-        if (distance2Checkpoint < 1.762)
-        {
-            SetReward(0.1f);
-            EndEpisode();
-           // Debug.Log("Episode ended after the distance measurement");
-           // Debug.Log("Reward Set successfully after the distance measurement");
-        }
-
-        
+        targetTransform.transform.localPosition = transform.localPosition;
+       // transform.forward = transform.localPosition;
+        transform.rotation = Quaternion.LookRotation(transform.forward);
 
     }
-
     public override void Heuristic(in ActionBuffers actionsOut)//for imitation learning
     {
-        ActionSegment<float> continuousActions = actionsOut.ContinuousActions;
+        //ActionSegment<int> discreteActions = actionsOut.DiscreteActions;
+        ActionSegment<float> continuous = actionsOut.ContinuousActions;
 
-
-        agent_transform.transform.localPosition = targetTransform.localPosition;
-        Effector.transform.position=actualPosition;
-        
+        //agent_transform.transform.localPosition = targetTransform.localPosition;
+        Effector.transform.localPosition = actualPosition;
+        targetTransform.localPosition = actualPosition;//just a visualisation of the sphere-representation of the agent
+        transform.localPosition = actualPosition;
 
         float speed = 1f;
 
@@ -181,88 +153,110 @@ public class MoveToPathEnd_agent : Agent {
 
         if (actualPosition == checkpoints[current].transform.position && current != numberOfPositions)
         {
-            current = 1;
-            EndEpisode();
-
+            current = 0;
+            
         }
 
-       // actualPosition = Vector3.MoveTowards(actualPosition, start_transform.transform.position, speed * Time.deltaTime);
         actualPosition = Vector3.MoveTowards(actualPosition, checkpoints[current].transform.position, speed * Time.deltaTime);
-        transform.right = checkpoints[current].transform.position;
-        transform.rotation = Quaternion.LookRotation(checkpoints[current].transform.position);
+        transform.forward = checkpoints[current].transform.position;
+        transform.rotation = Quaternion.LookRotation(transform.forward);
 
-        float moveSpeed = 0.5f;
-        continuousActions[0] = actualPosition.x;
-        continuousActions[1] = actualPosition.y;
-        continuousActions[2] = actualPosition.z;
-        transform.localPosition += new Vector3(actualPosition.x, actualPosition.y, actualPosition.z) * Time.deltaTime * moveSpeed;
-        //agent_transform.transform.localPosition = transform.localPosition;
-        if (actualPosition == end_transform.localPosition)
-        {
-           
-            EndEpisode();
-            // Debug.Log("Episode ended after the vectors met");
-            // Debug.Log("Reward Set successfully after the vectors met");
-        }
+        float moveSpeed = 1f;
+        continuous[0] = actualPosition.x;
+        continuous[1] = actualPosition.y;
+        continuous[2] = actualPosition.z;
+        transform.localPosition += new Vector3(actualPosition.x, actualPosition.y, actualPosition.z) * Time.deltaTime * moveSpeed;//adding to the current vector position new values
+
+          /*continuous[0] = Input.GetAxis("Horizontal");
+            continuous[1] = Input.GetKey("");
+            continuous[2] = Input.GetAxis("Vertical");*/
 
     }
 
     private void OnTriggerEnter(Collider other)
     {
-
-        if(other.gameObject.TryGetComponent<Goal>(out Goal goal)) { 
-            SetReward(+1f);//reward when hit the collider
-            EndEpisode();
-            Debug.Log("Episode ended after the collision");
-            Debug.Log("Reward Set successfully after the collison");
-
-        }
-        //AddReward();
-
-        if (other.gameObject.TryGetComponent<Wall>(out Wall wall)) {
-            AddReward(-1f);//reward when hit the collider
-            EndEpisode();
-            OnEpisodeBegin();
-            Debug.Log("Reward Set successfully after the collison with Wall");
-        }
-
-        if (other.gameObject.TryGetComponent<CheckpointSingle>(out CheckpointSingle checkpoint))
+        if (other.gameObject.TryGetComponent<Wall>(out Wall wall))
         {
-           SetReward(1f);
-           //EndEpisode();
-           Debug.Log("Reward Set successfully after the collison with Checkpoint");
+            AddReward(-0.005f);//reward when hit the collider
+           // EndEpisode();
         }
 
-          if (other.gameObject.TryGetComponent<Waypoints>(out Waypoints waypoints))
-          {
-              AddReward(0.1f);
+        bool isCorrect, isLastCheckpoint;
 
-          }
+        if (other.gameObject.tag == "Checkpoint")
+        {
+            checkpointSingle = other.GetComponent<CheckpointSingle>();
+            isCorrect = checkpointSingle.IsCorrectCheckPoint(robot);
+            isLastCheckpoint = checkpointSingle.IsLastCheckpoint();
+
+            if (checkpointSingle != null && robot != null)
+            {
+                if (isCorrect)
+                {
+                    AddReward(+1f);
+                    if (isLastCheckpoint)
+                    {
+                        AddReward(+2f);
+                        EndEpisode();
+                        Debug.Log("Epsiode ended after the collison with the last checkpoint");
+
+
+                    }
+                }
+                else
+                {
+                    AddReward(-0.005f);
+
+                }
+            }
+        }
+    }
+
+    void OnTriggerStay(Collider other)
+
+    {
+
+        if (other.gameObject.TryGetComponent<Wall>(out Wall wall))
+        {
+            
+            AddReward(-0.005f);
+           // EndEpisode();
+           // Debug.Log("Epsiode ends after the collison with the wall");
+
+        }
 
 
     }
-    
-   /*  public void Update()
-     {
-        agent_transform.transform.localPosition = targetTransform.localPosition;
 
 
+    void OnCollisionStay(Collision other)
+    {
+        if (other.gameObject.TryGetComponent<Wall>(out Wall wall))
+        {
 
-         if (targetTransform.localPosition == checkpoints[current].transform.position && current != numberOfPositions - 1)
-         {
-             current++;
-         }
+            AddReward(-0.005f);
+            // EndEpisode();
+            // Debug.Log("Epsiode ends after the collison with the wall");
+        }
 
-        if (targetTransform.localPosition == checkpoints[current].transform.position && current != numberOfPositions)
-         {
-             current = 1;
-         }
+    }
 
 
-        float speed = 0.5f;
-        targetTransform.transform.position = Vector3.MoveTowards(targetTransform.transform.position, checkpoints[current].transform.position, speed * Time.deltaTime);
-        transform.right = checkpoints[current].transform.position;
-        transform.rotation = Quaternion.LookRotation(checkpoints[current].transform.position);
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("outside_Wall"))
+        {
+            EndEpisode();
+            AddReward(-0.005f);
+            Vector3 zeroV = new Vector3(0.268f, -0.285f, 0.012f);
+            transform.localPosition = zeroV;
+            targetTransform.localPosition = zeroV;
+        }
 
-     }*/
+
+    }
 }
+     
+       
+
+
